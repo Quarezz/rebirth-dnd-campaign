@@ -1,0 +1,90 @@
+---
+alwaysApply: true
+description: D&D Campaign Vault Structure and Content Generation Guidelines
+---
+
+# D&D Campaign Vault Structure
+
+## Folder Structure
+This D&D campaign vault follows a specific organizational structure:
+
+### Core Folders
+- **`Персонажі/`** - Character files and character list
+- **`Локації/`** - Location files and location list  
+- **`Квести/`** - Quest files and quest list
+- **`Notes/`** - Session notes (Сесія X.md files)
+- **`Resources/`** - Images and other campaign resources
+
+### File Naming Conventions
+- **Characters**: `[CharacterName].md` (e.g., `Ара.md`, `Бріель_Сіанодел.md`)
+- **Locations**: `[LocationName].md` (e.g., `Селище.md`, `Таємничий_світ.md`)
+- **Quests**: `[QuestName].md` (e.g., `Посвята_дітей.md`, `Ловля_світляків.md`)
+- **Main Lists**: `Всі_[category].md` (e.g., `Всі_локації.md`, `Всі_квести.md`)
+
+## Content Generation Guidelines
+
+### Character Files Structure
+Each character file should contain:
+- **Основна інформація** - Race, gender, age, appearance
+- **Сім'я** - Family relationships
+- **Особливості** - Unique characteristics and traits
+- **Навички та здібності** - Skills, abilities, specializations
+- **Відносини** - Relationships with other characters
+- **Події** - Key events involving this character
+Before adding new file entry - make sure it's not already added in existing characters
+
+### Location Files Structure
+Each location file should contain:
+- **Основна інформація** - Type, location, status
+- **Опис** - Detailed description
+- **Важливі місця** - Key areas within the location
+- **Мешканці** - Inhabitants or visitors
+- **Події** - Events that occurred here
+Before adding new file entry - make sure it's not already added in existing locations
+
+### Quest Files Structure
+Each quest file should contain:
+- **Основна інформація** - Type, location, time, organizer
+- **Опис** - Quest description
+- **Учасники** - Participants
+- **Події** - Step-by-step events
+- **Результати** - Outcomes and consequences
+- **Значення** - Significance to the campaign
+Before adding new file entry - make sure it's not already added in existing quests
+
+## Content Rules
+
+### Language
+- **Content**: All content must be in Ukrainian
+- **Communication**: Use English for communication with user
+- **File names**: Use Ukrainian transliteration for file names
+
+### CRITICAL: Cross-References
+- Always add cross-references between related entities using `[EntityName](EntityName.md)` format
+- Link characters to locations where they appear
+- Link quests to locations where they occur
+- Link characters to quests they participate in
+- ALWAYS link the Session Notes where entities are mentioned
+
+### Data Sources
+- **Primary Source**: Session notes in `Notes/` folder
+- **Fact-Checking**: Always verify information against session notes
+- **Accuracy**: Never add information not present in the source material
+
+## CRITICAL: Fact-Checking Requirement
+
+**MANDATORY STEP**: After generating any new content, you MUST:
+1. **Read the relevant session notes** to verify all information
+2. **Cross-reference** character details, events, and relationships
+3. **Correct any false information** found during fact-checking
+4. **Update existing files** if new information contradicts previous content
+5. **Maintain consistency** across all files
+
+### Fact-Checking Process
+1. Identify which session notes contain relevant information
+2. Compare generated content with source material
+3. Flag any discrepancies or assumptions
+4. Correct errors immediately
+5. Update related files if necessary
+
+**Remember**: Accuracy is more important than completeness. If information is not clearly stated in the session notes, do not assume or invent details.
