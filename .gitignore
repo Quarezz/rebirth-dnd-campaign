@@ -9,3 +9,7 @@ tsconfig.tsbuildinfo
 private/
 .replit
 replit.nix
+
+# Sync script generated files
+.sync-log.txt
+.ai-prompt.txt
