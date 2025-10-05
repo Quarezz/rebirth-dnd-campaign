@@ -1,0 +1,27 @@
+Process the files that were just synced from Obsidian to Quartz.
+
+STEP 1: Read @.sync-log.txt to see which files were changed/added
+
+STEP 2: For each changed file, read it and analyze:
+- Type of content (Character, Location, Quest, Session Note)
+- Entities mentioned that need cross-references
+- New information added
+
+STEP 3: Update cross-references:
+- Add links between related entities using [EntityName](EntityName.md)
+- Link characters to locations, quests, and session notes
+- Link quests to locations and participants
+- ALWAYS link to Session Notes where entities are mentioned
+
+STEP 4: Update ALL index files:
+- Персонажі/Всі_персонажі.md (if characters changed)
+- Локації/Всі_локації.md (if locations changed)
+- Квести/Всі_квести.md (if quests changed)
+- Хронологія_подій.md (if session notes added)
+- content/index.md (update with latest events)
+
+STEP 5: CRITICAL - Fact-check everything against session notes
+
+STEP 6: Report all modifications made
+
+Remember: All content in Ukrainian, accuracy over completeness.

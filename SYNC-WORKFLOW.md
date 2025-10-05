@@ -1,198 +1,187 @@
-# Obsidian → Quartz Sync Workflow
+# Obsidian ↔ Quartz Sync Workflow
 
-This guide explains the automated workflow for syncing your Obsidian vault to Quartz and updating all references and indexes.
+This document describes the complete workflow for syncing your D&D campaign between Obsidian and Quartz with AI processing.
 
-## Quick Start
+## 📋 Overview
 
-### Option A: Fully Automated (Recommended)
+1. **Obsidian** - Your source of truth (session notes are edited here)
+2. **Quartz** - Publishing platform (AI updates character/location/quest files here)
+3. **AI Agent** - Processes session notes and updates cross-references
+
+## 🔄 Complete Workflow
+
+### Step 1: Sync from Obsidian to Quartz
+
 ```bash
 ./sync-obsidian.sh --auto-update
 ```
-This will sync files AND automatically prepare the AI agent prompt!
 
-### Option B: Manual Steps
+**What it does:**
+- ✅ Syncs ALL files from Obsidian to Quartz
+- ✅ Detects which files changed
+- ✅ Shows verbose output of what was synced
+- ✅ Displays AI processing request
 
-**1. Sync Your Obsidian Notes**
-```bash
-./sync-obsidian.sh
-```
+**What to do:**
+- Copy the AI prompt from terminal
+- Paste it into Cursor chat
+- AI will process and update files automatically
 
-This will:
-- Compare your Obsidian vault with Quartz content folder
-- Copy only new or modified files
-- Log all changed files to `.sync-log.txt`
-- Display a summary of what was synced
+### Step 2: AI Processing
 
-**Dry Run Mode** (preview without copying):
-```bash
-./sync-obsidian.sh --dry-run
-```
-
-**2. Update References & Indexes (AI Agent)**
-
-**Method 1:** Run the helper script
-```bash
-./run-ai-update.sh
-```
-Then use `@.ai-prompt.txt` in Cursor
-
-**Method 2:** Use Cursor command directly
-```
-@sync-update
-```
-
-**Method 3:** Use Command Palette
-- Press `Ctrl+Shift+P` (Linux) or `Cmd+Shift+P` (Mac)
-- Type "Run Cursor Command"
-- Select "sync-update"
-
-The AI will automatically:
-- ✅ Read all changed files from the sync log
-- ✅ Analyze new content (characters, locations, quests, events)
-- ✅ Add cross-references between related entities
-- ✅ Update all index files (Всі_персонажі, Всі_локації, Всі_квести, etc.)
-- ✅ Update chronology with new session notes
-- ✅ Update main index with latest events
+The AI will:
+- ✅ Read new/modified session notes
+- ✅ Update character files with new events
+- ✅ Update location files with new information
+- ✅ Update quest files with progress
+- ✅ Update Хронологія_подій.md
+- ✅ Update index.md with latest events
+- ✅ Create cross-references between entities
 - ✅ Fact-check everything against session notes
-- ✅ Report all changes made
 
-### 3. Build Your Site
+**IMPORTANT:** AI will NOT modify session notes (they are source of truth)
+
+### Step 3: Merge AI Changes Back to Obsidian
+
+First, preview what will be merged:
+
 ```bash
-npx quartz build
+./merge-back-obsidian.sh
 ```
 
-## Script Options
+This runs in **DRY RUN mode** by default and shows what would be copied.
+
+To actually merge the changes:
+
+```bash
+./merge-back-obsidian.sh --execute
+```
+
+**What it does:**
+- ✅ Merges AI-modified files back to Obsidian
+- ✅ EXCLUDES Notes/ folder (session notes never overwritten)
+- ✅ Only copies files that actually changed
+- ✅ Creates parent directories as needed
+- ✅ Checks for conflicts
+
+**What it merges:**
+- ✅ Персонажі/ (character files)
+- ✅ Локації/ (location files)
+- ✅ Квести/ (quest files)
+- ✅ Хронологія_подій.md
+- ✅ index.md
+- ✅ Resources/ (images)
+
+**What it excludes:**
+- ❌ Notes/ (session notes - source of truth)
+
+### Step 4: Commit Obsidian Changes
+
+```bash
+cd /home/morf/Documents/OVault/DND/Campaigns/Rebirth
+git status
+git diff
+git add .
+git commit -m "AI updates: Session 47 processed"
+git push
+```
+
+### Step 5: Build and Deploy Quartz
+
+```bash
+cd /home/morf/Downloads/quartz
+npx quartz build
+# or with preview:
+npx quartz build --serve
+```
+
+## 🛡️ Safety Features
 
 ### sync-obsidian.sh
+- Uses rsync with --checksum for accurate change detection
+- Shows exactly what files changed
+- Logs all synced files to `.sync-log.txt`
+- Handles filenames with spaces correctly
+
+### merge-back-obsidian.sh
+- **Default DRY RUN mode** - won't copy unless you use --execute
+- **Excludes Notes/ folder** - session notes never overwritten
+- **Checks for Obsidian uncommitted changes** - warns before merging
+- **Uses --force flag** - can override safety checks if needed
+- **Compares files** - skips identical files
+- **Logs all merges** to `.merge-back-log.txt`
+
+## 📝 Quick Reference
+
+### Full Workflow (One-Liner)
 ```bash
-./sync-obsidian.sh [OPTIONS]
+# 1. Sync to Quartz and process with AI
+./sync-obsidian.sh --auto-update
+# (paste prompt into Cursor chat)
 
-Options:
-  -n, --dry-run        Preview changes without copying files
-  -a, --auto-update    Automatically prepare AI agent prompt after sync
-  -h, --help           Show help message
+# 2. Preview merge-back
+./merge-back-obsidian.sh
+
+# 3. Execute merge-back
+./merge-back-obsidian.sh --execute
+
+# 4. Commit to Obsidian
+cd ~/Documents/OVault/DND/Campaigns/Rebirth && git add . && git commit -m "AI updates" && git push
+
+# 5. Build Quartz
+cd ~/Downloads/quartz && npx quartz build
 ```
 
-### run-ai-update.sh
+## 🎯 Best Practices
+
+1. **Always review AI changes** before merging back to Obsidian
+2. **Commit Obsidian changes** regularly to track AI modifications
+3. **Use dry-run mode first** to preview what will be merged
+4. **Keep session notes in Obsidian** - never edit them in Quartz
+5. **Rebuild Quartz** after merging to see updates on your site
+
+## 🔧 Troubleshooting
+
+### "Obsidian has uncommitted changes"
 ```bash
-./run-ai-update.sh
-```
-Prepares the AI agent prompt from the sync log. Run this if you didn't use `--auto-update`.
+# Option 1: Commit your changes first
+cd ~/Documents/OVault/DND/Campaigns/Rebirth
+git add . && git commit -m "Manual updates"
 
-## Configuration
-
-Edit `sync-obsidian.sh` to change:
-- **OBSIDIAN_VAULT**: Path to your Obsidian vault (currently: `/home/morf/Documents/OVault/DND/Campaigns/Rebirth`)
-- **QUARTZ_CONTENT**: Path to Quartz content folder (currently: `/home/morf/Downloads/quartz/content`)
-
-## Files
-
-- `sync-obsidian.sh` - Main sync script with auto-update option
-- `run-ai-update.sh` - Standalone AI update script
-- `.sync-log.txt` - Log of synced files (auto-generated)
-- `.ai-prompt.txt` - AI agent prompt with sync log (auto-generated)
-- `.cursor/commands/sync-update.md` - AI agent command template
-- `.cursor/rules/structure.mdc` - Campaign vault structure rules
-
-## Workflow Diagrams
-
-### Automated Workflow (--auto-update)
-```
-┌─────────────────────────────────┐
-│      Edit in Obsidian           │
-│      (Your DnD Campaign)        │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│  ./sync-obsidian.sh             │
-│         --auto-update           │ ← Single command!
-│                                 │
-│  • Compares & Copies            │
-│  • Creates .sync-log.txt        │
-│  • Creates .ai-prompt.txt       │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│   Use @.ai-prompt.txt           │ ← Manual step
-│   in Cursor                     │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│ AI Updates:                     │
-│ • Cross-references              │
-│ • Indexes                       │
-│ • Chronology                    │
-│ • Fact-checking                 │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│   npx quartz build              │ ← Manual step
-└─────────────────────────────────┘
+# Option 2: Use force flag (not recommended)
+./merge-back-obsidian.sh --execute --force
 ```
 
-### Manual Workflow
-```
-┌─────────────────────────┐
-│   Edit in Obsidian      │
-└───────────┬─────────────┘
-            │
-            ▼
-┌─────────────────────────┐
-│  ./sync-obsidian.sh     │ ← Manual step
-└───────────┬─────────────┘
-            │
-            ▼
-┌─────────────────────────┐
-│  ./run-ai-update.sh     │ ← Manual step
-│  (or @sync-update)      │
-└───────────┬─────────────┘
-            │
-            ▼
-┌─────────────────────────┐
-│   AI processes files    │
-└───────────┬─────────────┘
-            │
-            ▼
-┌─────────────────────────┐
-│   npx quartz build      │ ← Manual step
-└─────────────────────────┘
-```
+### "No files to merge"
+This means Quartz has no uncommitted changes. This is normal if:
+- You just synced from Obsidian
+- AI hasn't processed anything yet
+- All AI changes were already merged back
 
-## Safety Features
+### Files with spaces not working
+Both scripts handle spaces correctly. If you see issues:
+- Make sure file names use proper encoding
+- Check that both Obsidian and Quartz use UTF-8
 
-✅ **Never deletes files** - Only copies new/modified files  
-✅ **Dry run mode** - Preview changes before applying  
-✅ **Excludes Obsidian metadata** - Skips `.obsidian/`, `.trash/`, etc.  
-✅ **Fact-checking** - AI verifies all information against session notes  
-✅ **Change tracking** - All synced files are logged  
+## 📊 File Tracking
 
-## Troubleshooting
+- **`.sync-log.txt`** - Files synced from Obsidian to Quartz
+- **`.merge-back-log.txt`** - Files merged from Quartz to Obsidian
 
-**Q: Nothing synced, but I know I changed files**
+These logs help you track what changed and when.
 
-A: Check that:
-- File modification times are newer in Obsidian
-- Files are saved in Obsidian
-- File paths match the configured `OBSIDIAN_VAULT` path
+## ⚠️ Important Notes
 
-**Q: AI command not working**
+- **Session notes are read-only in this workflow** - edit them only in Obsidian
+- **AI updates are always in Quartz first** - then merged back to Obsidian
+- **Git is used for change detection** - both repos should be git repositories
+- **Always review before committing** - AI can make mistakes
 
-A: Make sure:
-- The `.sync-log.txt` file exists (run sync script first)
-- You're using `@sync-update` or the Command Palette
+## 🎉 Benefits
 
-**Q: Cross-references not being added**
-
-A: The AI requires clear information in session notes. If entities aren't mentioned together in session notes, cross-references won't be added (by design, to maintain accuracy).
-
-## Tips
-
-- Run sync after each Obsidian editing session
-- Use `--dry-run` first if you're unsure what changed
-- Review the AI's report after `@sync-update` to see what was updated
-- The AI will notify you of any inconsistencies or missing information
-
+✅ **Automated cross-referencing** - AI maintains links between entities  
+✅ **Consistent formatting** - All files follow the same structure  
+✅ **Fact-checked** - AI verifies against session notes  
+✅ **Bi-directional sync** - Changes flow both ways safely  
+✅ **Source of truth preserved** - Session notes never modified by AI  
+✅ **Version controlled** - All changes tracked in git  
