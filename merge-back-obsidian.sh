@@ -100,13 +100,16 @@ if [ -n "$DRY_RUN" ]; then
     echo ""
 fi
 
-# Check Obsidian vault for uncommitted changes
-print_info "Checking Obsidian vault for uncommitted changes..."
+# Check Obsidian vault for uncommitted changes (if it's a git repo)
+print_info "Checking Obsidian vault status..."
 cd "$OBSIDIAN_VAULT"
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     print_warning "Obsidian vault is not a git repository"
-    print_info "Cannot detect uncommitted changes - proceeding anyway"
+    print_info "Skipping git checks - will proceed with merge"
+    echo ""
+    IS_GIT_REPO=false
 else
+    IS_GIT_REPO=true
     OBSIDIAN_STATUS=$(git status --short 2>/dev/null)
     if [ -n "$OBSIDIAN_STATUS" ]; then
         print_warning "Obsidian vault has uncommitted changes:"

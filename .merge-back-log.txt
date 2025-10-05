@@ -1,0 +1,8 @@
+# Merge-Back Log - Sun Oct  5 07:51:18 PM EEST 2025
+# Files merged from Quartz to Obsidian
+
+index.md
+Resources/Pasted image 20240922173652.png
+Resources/Pasted image 20241013174204.png
+Resources/Pasted image 20241013174213.png
+Resources/Pasted image 20241013192447.png
