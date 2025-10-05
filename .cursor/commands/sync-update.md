@@ -32,6 +32,8 @@ STEP 6: Report what was updated:
 - Summarize the changes made
 - Note any inconsistencies found and corrected
 
+STEP 7: In the main index - make sure to add latest events and update them as per latest notes
+
 Remember: 
 - All content must be in Ukrainian
 - Accuracy is more important than completeness
