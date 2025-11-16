@@ -5,9 +5,9 @@
 # It only copies files that were changed in Quartz (detected via git)
 
 # Configuration
-QUARTZ_CONTENT="/home/morf/Downloads/quartz/content"
+QUARTZ_CONTENT="/home/morf/Documents/quartz/content"
 OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
-MERGE_LOG="/home/morf/Downloads/quartz/.merge-back-log.txt"
+MERGE_LOG="/home/morf/Documents/quartz/.merge-back-log.txt"
 
 # Colors for output
 GREEN='\033[0;32m'

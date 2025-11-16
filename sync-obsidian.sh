@@ -6,8 +6,8 @@
 
 # Configuration
 OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
-QUARTZ_CONTENT="/home/morf/Downloads/quartz/content"
-SYNC_LOG="/home/morf/Downloads/quartz/.sync-log.txt"
+QUARTZ_CONTENT="/home/morf/Documents/quartz/content"
+SYNC_LOG="/home/morf/Documents/quartz/.sync-log.txt"
 
 # Colors for output
 GREEN='\033[0;32m'

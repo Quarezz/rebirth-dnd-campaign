@@ -89,7 +89,7 @@ git push
 ### Step 5: Build and Deploy Quartz
 
 ```bash
-cd /home/morf/Downloads/quartz
+cd /home/morf/Documents/quartz
 npx quartz build
 # or with preview:
 npx quartz build --serve
@@ -129,7 +129,7 @@ npx quartz build --serve
 cd ~/Documents/OVault/DND/Campaigns/Rebirth && git add . && git commit -m "AI updates" && git push
 
 # 5. Build Quartz
-cd ~/Downloads/quartz && npx quartz build
+cd ~/Documents/quartz && npx quartz build
 ```
 
 ## 🎯 Best Practices
