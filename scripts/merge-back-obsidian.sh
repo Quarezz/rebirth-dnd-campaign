@@ -5,9 +5,12 @@
 # It only copies files that were changed in Quartz (detected via git)
 
 # Configuration
-QUARTZ_CONTENT="/home/morf/Documents/quartz/content"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+QUARTZ_CONTENT="$PROJECT_ROOT/content"
 OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
-MERGE_LOG="/home/morf/Documents/quartz/.merge-back-log.txt"
+MERGE_LOG="$PROJECT_ROOT/.merge-back-log.txt"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -136,18 +139,49 @@ else
 fi
 cd - > /dev/null
 
-# Detect which files changed in Quartz (using git)
-print_info "Detecting files changed in Quartz..."
+# Detect which files should be merged back to Obsidian
+print_info "Detecting files to merge back to Obsidian..."
 echo ""
 
 cd "$QUARTZ_CONTENT"
 
-# Get modified and new files, but EXCLUDE Notes/ folder (session notes are source of truth)
+# Strategy: Check files that were recently synced from Obsidian
+# These are the files that AI would have processed
+SYNC_LOG="$PROJECT_ROOT/.sync-log.txt"
+
+if [ -f "$SYNC_LOG" ]; then
+    print_info "Using sync log to find files that were recently imported..."
+    # Read synced files (skip header lines starting with #)
+    SYNCED_FILES=$(grep -v '^#' "$SYNC_LOG" | grep -v '^$' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
+
+    if [ -n "$SYNCED_FILES" ]; then
+        print_detail "Found $(echo "$SYNCED_FILES" | wc -l) files in sync log"
+        echo ""
+    fi
+else
+    print_warning "No sync log found. Falling back to git detection..."
+    SYNCED_FILES=""
+fi
+
+# Also check for any git changes (as backup)
 MODIFIED_FILES=$(git diff --name-only HEAD 2>/dev/null | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
 UNTRACKED_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
 
-# Combine both lists
-ALL_CHANGED_FILES=$(echo -e "$MODIFIED_FILES\n$UNTRACKED_FILES" | grep -v '^$' | sort -u)
+# Combine all potential files to check
+POTENTIAL_FILES=$(echo -e "$SYNCED_FILES\n$MODIFIED_FILES\n$UNTRACKED_FILES" | grep -v '^$' | sort -u)
+
+# Filter to only files that actually exist and are different from Obsidian
+ALL_CHANGED_FILES=""
+while IFS= read -r file; do
+    if [ -n "$file" ] && [ -f "$QUARTZ_CONTENT/$file" ]; then
+        OBSIDIAN_FILE="$OBSIDIAN_VAULT/$file"
+        if [ ! -f "$OBSIDIAN_FILE" ] || ! cmp -s "$QUARTZ_CONTENT/$file" "$OBSIDIAN_FILE"; then
+            ALL_CHANGED_FILES="${ALL_CHANGED_FILES}${file}\n"
+        fi
+    fi
+done <<< "$POTENTIAL_FILES"
+
+ALL_CHANGED_FILES=$(echo -e "$ALL_CHANGED_FILES" | grep -v '^$')
 
 # Check if any Notes/ files were excluded
 EXCLUDED_NOTES=$(git diff --name-only HEAD 2>/dev/null | grep '^Notes/' | grep -E '\.(md|png|jpg|jpeg|gif)$')
@@ -158,8 +192,8 @@ if [ -n "$EXCLUDED_NOTES" ]; then
 fi
 
 if [ -z "$ALL_CHANGED_FILES" ]; then
-    print_info "No modified files detected in Quartz"
-    print_info "Nothing to merge back to Obsidian"
+    print_info "No files need to be merged back to Obsidian"
+    print_detail "All files are identical between Quartz and Obsidian"
     cd - > /dev/null
     exit 0
 fi
@@ -179,29 +213,18 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Categorize files
-MODIFIED_COUNT=$(echo "$MODIFIED_FILES" | grep -v '^$' | wc -l)
-NEW_COUNT=$(echo "$UNTRACKED_FILES" | grep -v '^$' | wc -l)
-
-if [ $MODIFIED_COUNT -gt 0 ]; then
-    print_detail "Modified existing files ($MODIFIED_COUNT):"
-    echo "$MODIFIED_FILES" | while IFS= read -r file; do
-        if [ -n "$file" ]; then
-            print_file "$file"
+# Show files to be merged
+print_detail "Files to merge back to Obsidian ($FILE_COUNT):"
+echo "$ALL_CHANGED_FILES" | while IFS= read -r file; do
+    if [ -n "$file" ]; then
+        if [ -f "$OBSIDIAN_VAULT/$file" ]; then
+            print_file "[UPDATE] $file"
+        else
+            print_file "[NEW] $file"
         fi
-    done
-    echo ""
-fi
-
-if [ $NEW_COUNT -gt 0 ]; then
-    print_detail "New files ($NEW_COUNT):"
-    echo "$UNTRACKED_FILES" | while IFS= read -r file; do
-        if [ -n "$file" ]; then
-            print_file "$file"
-        fi
-    done
-    echo ""
-fi
+    fi
+done
+echo ""
 
 cd - > /dev/null
 

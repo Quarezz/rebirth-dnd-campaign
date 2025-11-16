@@ -5,9 +5,12 @@
 # It only copies new or modified files and NEVER deletes files from Quartz
 
 # Configuration
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
 OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
-QUARTZ_CONTENT="/home/morf/Documents/quartz/content"
-SYNC_LOG="/home/morf/Documents/quartz/.sync-log.txt"
+QUARTZ_CONTENT="$PROJECT_ROOT/content"
+SYNC_LOG="$PROJECT_ROOT/.sync-log.txt"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -349,7 +352,7 @@ if [ $RSYNC_EXIT_CODE -eq 0 ]; then
                 echo ""
                 
                 # Create AI prompt
-                AI_PROMPT_FILE="$QUARTZ_CONTENT/../.ai-auto-prompt.txt"
+                AI_PROMPT_FILE="$QUARTZ_CONTENT/../.ai-prompt.txt"
                 cat > "$AI_PROMPT_FILE" << 'EOFPROMPT'
 Process the files that were just synced from Obsidian to Quartz.
 
