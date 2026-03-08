@@ -8,7 +8,13 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+if [ -d "/Users/rniko/Documents/CloudVault/DND/Campaigns/Rebirth" ]; then
+    OBSIDIAN_VAULT="/Users/rniko/Documents/CloudVault/DND/Campaigns/Rebirth"
+elif [ -d "/home/morf/Documents/OVault/DND/Campaigns/Rebirth" ]; then
+    OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+else
+    OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+fi
 QUARTZ_CONTENT="$PROJECT_ROOT/content"
 SYNC_LOG="$PROJECT_ROOT/.sync-log.txt"
 
@@ -442,4 +448,3 @@ echo ""
 print_info "Sync completed at: $(date '+%Y-%m-%d %H:%M:%S')"
 print_detail "Duration: ${SYNC_DURATION} seconds"
 echo "═══════════════════════════════════════════════════════"
-

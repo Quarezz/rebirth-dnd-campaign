@@ -9,7 +9,13 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 QUARTZ_CONTENT="$PROJECT_ROOT/content"
-OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+if [ -d "/Users/rniko/Documents/CloudVault/DND/Campaigns/Rebirth" ]; then
+    OBSIDIAN_VAULT="/Users/rniko/Documents/CloudVault/DND/Campaigns/Rebirth"
+elif [ -d "/home/morf/Documents/OVault/DND/Campaigns/Rebirth" ]; then
+    OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+else
+    OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+fi
 MERGE_LOG="$PROJECT_ROOT/.merge-back-log.txt"
 
 # Colors for output
@@ -164,8 +170,9 @@ else
 fi
 
 # Also check for any git changes (as backup)
-MODIFIED_FILES=$(git diff --name-only HEAD 2>/dev/null | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
-UNTRACKED_FILES=$(git ls-files --others --exclude-standard 2>/dev/null | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
+# Run these from the project root so paths are stable, then strip the leading content/
+MODIFIED_FILES=$(git -C "$PROJECT_ROOT" diff --name-only HEAD -- content 2>/dev/null | sed 's#^content/##' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
+UNTRACKED_FILES=$(git -C "$PROJECT_ROOT" ls-files --others --exclude-standard -- content 2>/dev/null | sed 's#^content/##' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
 
 # Combine all potential files to check
 POTENTIAL_FILES=$(echo -e "$SYNCED_FILES\n$MODIFIED_FILES\n$UNTRACKED_FILES" | grep -v '^$' | sort -u)
@@ -184,7 +191,7 @@ done <<< "$POTENTIAL_FILES"
 ALL_CHANGED_FILES=$(echo -e "$ALL_CHANGED_FILES" | grep -v '^$')
 
 # Check if any Notes/ files were excluded
-EXCLUDED_NOTES=$(git diff --name-only HEAD 2>/dev/null | grep '^Notes/' | grep -E '\.(md|png|jpg|jpeg|gif)$')
+EXCLUDED_NOTES=$(git -C "$PROJECT_ROOT" diff --name-only HEAD -- content 2>/dev/null | sed 's#^content/##' | grep '^Notes/' | grep -E '\.(md|png|jpg|jpeg|gif)$')
 if [ -n "$EXCLUDED_NOTES" ]; then
     EXCLUDED_COUNT=$(echo "$EXCLUDED_NOTES" | wc -l)
     print_warning "Excluded $EXCLUDED_COUNT file(s) from Notes/ folder (source of truth)"
@@ -342,4 +349,3 @@ echo ""
 print_info "Merge completed at: $(date '+%Y-%m-%d %H:%M:%S')"
 print_detail "Duration: ${MERGE_DURATION} seconds"
 echo "═══════════════════════════════════════════════════════"
-

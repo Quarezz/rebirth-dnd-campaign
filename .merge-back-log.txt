@@ -1,6 +1,9 @@
-# Merge-Back Log - Sun Nov 16 05:51:00 PM EET 2025
+# Merge-Back Log - Sun Mar  8 20:22:00 EET 2026
 # Files merged from Quartz to Obsidian
 
+index.md
 Квести/Всі_квести.md
 Локації/Всі_локації.md
+Локації/Есборг.md
+Персонажі/00_Index.md
 Хронологія_подій.md
