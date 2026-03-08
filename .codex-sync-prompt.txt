@@ -1,0 +1,19 @@
+You are updating a Ukrainian D&D campaign knowledge base after an Obsidian import.
+
+First read `.sync-log.txt` to get the exact files imported in the latest sync.
+
+Requirements:
+- Work only inside this repository.
+- Treat `content/Notes/` as source of truth and do not modify files under `content/Notes/`.
+- Update cross-references between characters, locations, quests, and timeline/index pages when the imported changes justify it.
+- Keep all user-facing content in Ukrainian.
+- Use only facts supported by the imported notes and the current repository state.
+- Relevant index pages usually include:
+  - `content/Персонажі/00_Index.md`
+  - `content/Локації/Всі_локації.md`
+  - `content/Квести/Всі_квести.md`
+  - `content/Хронологія_подій.md`
+  - `content/index.md`
+- Preserve existing style and link conventions.
+
+At the end, provide a concise summary of the files you changed.
