@@ -501,12 +501,27 @@ collect_merge_candidates() {
     : >"$candidates_tmp"
     : >"$filtered_tmp"
 
-    if [ -f "$SYNC_LOG" ]; then
-        grep -v '^#' "$SYNC_LOG" | grep -v '^$' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/' >>"$candidates_tmp" || true
-    fi
+    # Compare every merge-eligible file under Quartz content directly against
+    # Obsidian. Using only the sync log or git dirtiness misses committed files
+    # that still never made it back to the vault.
+    (
+        cd "$QUARTZ_CONTENT" || exit 1
+        find . -type f -print | sed 's#^\./##'
+    ) | while IFS= read -r file_path; do
+        [ -z "$file_path" ] && continue
 
-    git -C "$QUARTZ_CONTENT" diff --name-only HEAD 2>/dev/null | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/' >>"$candidates_tmp" || true
-    git -C "$QUARTZ_CONTENT" ls-files --others --exclude-standard 2>/dev/null | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/' >>"$candidates_tmp" || true
+        if should_skip_relative_path "$file_path"; then
+            continue
+        fi
+
+        case "$file_path" in
+            Notes/*) continue ;;
+        esac
+
+        if is_markdown_file "$file_path" || is_asset_file "$file_path"; then
+            printf '%s\n' "$file_path" >>"$candidates_tmp"
+        fi
+    done
 
     sort -u "$candidates_tmp" | while IFS= read -r file_path; do
         local quartz_file obsidian_file

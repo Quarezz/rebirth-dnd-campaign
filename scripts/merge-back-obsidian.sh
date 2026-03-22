@@ -2,7 +2,7 @@
 
 # Quartz to Obsidian Merge-Back Script
 # This script syncs AI-modified content from Quartz back to the Obsidian vault
-# It only copies files that were changed in Quartz (detected via git)
+# It scans merge-eligible Quartz files and copies only those that differ
 
 # Configuration
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -50,6 +50,37 @@ print_detail() {
 
 print_file() {
     echo -e "${MAGENTA}    ✓${NC} $1"
+}
+
+is_merge_candidate() {
+    case "$1" in
+        Notes/*|.obsidian/*|.git/*|.codex/*|.trash/*|*/.obsidian/*|*/.git/*|*/.codex/*|*/.trash/*)
+            return 1
+            ;;
+        *.md|*.png|*.jpg|*.jpeg|*.gif|*.MD|*.PNG|*.JPG|*.JPEG|*.GIF)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+collect_content_files() {
+    local search_root="$1"
+
+    [ -d "$search_root" ] || return 0
+
+    (
+        cd "$search_root" || exit 1
+        find . -type f -print | sed 's#^\./##'
+    ) | while IFS= read -r file; do
+        [ -n "$file" ] || continue
+
+        if is_merge_candidate "$file"; then
+            printf '%s\n' "$file"
+        fi
+    done | sort -u
 }
 
 # Check if directories exist
@@ -151,31 +182,17 @@ echo ""
 
 cd "$QUARTZ_CONTENT"
 
-# Strategy: Check files that were recently synced from Obsidian
-# These are the files that AI would have processed
+# Strategy: Scan every merge-eligible file and compare it directly to the vault.
+# Relying on only the last sync log or uncommitted git changes misses files that
+# were already committed in Quartz but still never made it back to Obsidian.
 SYNC_LOG="$PROJECT_ROOT/.sync-log.txt"
 
 if [ -f "$SYNC_LOG" ]; then
-    print_info "Using sync log to find files that were recently imported..."
-    # Read synced files (skip header lines starting with #)
-    SYNCED_FILES=$(grep -v '^#' "$SYNC_LOG" | grep -v '^$' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
-
-    if [ -n "$SYNCED_FILES" ]; then
-        print_detail "Found $(echo "$SYNCED_FILES" | wc -l) files in sync log"
-        echo ""
-    fi
-else
-    print_warning "No sync log found. Falling back to git detection..."
-    SYNCED_FILES=""
+    print_detail "Last sync log found: $SYNC_LOG"
 fi
 
-# Also check for any git changes (as backup)
-# Run these from the project root so paths are stable, then strip the leading content/
-MODIFIED_FILES=$(git -C "$PROJECT_ROOT" diff --name-only HEAD -- content 2>/dev/null | sed 's#^content/##' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
-UNTRACKED_FILES=$(git -C "$PROJECT_ROOT" ls-files --others --exclude-standard -- content 2>/dev/null | sed 's#^content/##' | grep -E '\.(md|png|jpg|jpeg|gif)$' | grep -v '^Notes/')
-
-# Combine all potential files to check
-POTENTIAL_FILES=$(echo -e "$SYNCED_FILES\n$MODIFIED_FILES\n$UNTRACKED_FILES" | grep -v '^$' | sort -u)
+print_info "Scanning all merge-eligible Quartz files..."
+POTENTIAL_FILES=$(collect_content_files "$QUARTZ_CONTENT")
 
 # Filter to only files that actually exist and are different from Obsidian
 ALL_CHANGED_FILES=""
@@ -191,9 +208,19 @@ done <<< "$POTENTIAL_FILES"
 ALL_CHANGED_FILES=$(echo -e "$ALL_CHANGED_FILES" | grep -v '^$')
 
 # Check if any Notes/ files were excluded
-EXCLUDED_NOTES=$(git -C "$PROJECT_ROOT" diff --name-only HEAD -- content 2>/dev/null | sed 's#^content/##' | grep '^Notes/' | grep -E '\.(md|png|jpg|jpeg|gif)$')
+EXCLUDED_NOTES=""
+while IFS= read -r file; do
+    if [ -n "$file" ]; then
+        OBSIDIAN_FILE="$OBSIDIAN_VAULT/$file"
+        if [ ! -f "$OBSIDIAN_FILE" ] || ! cmp -s "$QUARTZ_CONTENT/$file" "$OBSIDIAN_FILE"; then
+            EXCLUDED_NOTES="${EXCLUDED_NOTES}${file}\n"
+        fi
+    fi
+done <<< "$(cd "$QUARTZ_CONTENT" && find Notes -type f -print 2>/dev/null | sort)"
+
+EXCLUDED_NOTES=$(echo -e "$EXCLUDED_NOTES" | grep -v '^$')
 if [ -n "$EXCLUDED_NOTES" ]; then
-    EXCLUDED_COUNT=$(echo "$EXCLUDED_NOTES" | wc -l)
+    EXCLUDED_COUNT=$(echo "$EXCLUDED_NOTES" | wc -l | tr -d ' ')
     print_warning "Excluded $EXCLUDED_COUNT file(s) from Notes/ folder (source of truth)"
     echo ""
 fi
@@ -205,7 +232,7 @@ if [ -z "$ALL_CHANGED_FILES" ]; then
     exit 0
 fi
 
-FILE_COUNT=$(echo "$ALL_CHANGED_FILES" | wc -l)
+FILE_COUNT=$(echo "$ALL_CHANGED_FILES" | wc -l | tr -d ' ')
 print_success "Found $FILE_COUNT AI-modified file(s) to merge:"
 echo ""
 
@@ -328,15 +355,20 @@ else
         echo ""
         
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        print_warning "⚠ IMPORTANT: Review and commit Obsidian changes"
+        print_warning "⚠ IMPORTANT: Review Obsidian changes"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
-        print_info "Next steps:"
-        print_file "cd $OBSIDIAN_VAULT"
-        print_file "git status"
-        print_file "git diff"
-        print_file "git add ."
-        print_file "git commit -m 'Merged AI updates from Quartz'"
+        if [ "$IS_GIT_REPO" = true ]; then
+            print_info "Next steps:"
+            print_file "cd $OBSIDIAN_VAULT"
+            print_file "git status"
+            print_file "git diff"
+            print_file "git add ."
+            print_file "git commit -m 'Merged AI updates from Quartz'"
+        else
+            print_info "Obsidian vault is not a git repository, so review the new files directly in the vault."
+            print_file "open \"$OBSIDIAN_VAULT\""
+        fi
         echo ""
     else
         print_info "No files needed to be merged (all identical)"
