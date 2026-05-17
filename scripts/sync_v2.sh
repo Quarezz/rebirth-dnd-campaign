@@ -13,6 +13,7 @@ SYNC_LOG="$PROJECT_ROOT/.sync-log.txt"
 MERGE_LOG="$PROJECT_ROOT/.merge-back-log.txt"
 AI_PROMPT_FILE="$PROJECT_ROOT/.codex-sync-prompt.txt"
 AI_REPORT_FILE="$PROJECT_ROOT/.codex-sync-report.txt"
+DASHBOARD_PROMPT_FILE="$PROJECT_ROOT/CAMPAIGN-DASHBOARD-PROMPT.md"
 
 OBSIDIAN_VAULT_NAME="${OBSIDIAN_VAULT_NAME:-CloudVault}"
 OBSIDIAN_ROOT_PREFIX="${OBSIDIAN_ROOT_PREFIX:-DND/Campaigns/Rebirth}"
@@ -434,12 +435,17 @@ run_codex_update() {
         return 0
     fi
 
+    if [ ! -f "$DASHBOARD_PROMPT_FILE" ]; then
+        print_error "Campaign dashboard prompt not found: $DASHBOARD_PROMPT_FILE"
+        exit 1
+    fi
+
     cat >"$AI_PROMPT_FILE" <<'EOF'
 You are updating a Ukrainian D&D campaign knowledge base after an Obsidian import.
 
 First read `.sync-log.txt` to get the exact files imported in the latest sync.
 
-Requirements:
+Global requirements:
 - Work only inside this repository.
 - Treat `content/Notes/` as source of truth and do not modify files under `content/Notes/`.
 - Update cross-references between characters, locations, quests, and timeline/index pages when the imported changes justify it.
@@ -453,11 +459,22 @@ Requirements:
   - `content/index.md`
 - Preserve existing style and link conventions.
 
-At the end, provide a concise summary of the files you changed.
+Required workflow:
+1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, and chronology.
+2. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
+3. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
+4. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
+5. Run any build/check commands required by the embedded dashboard prompt. The outer sync script will run `npx quartz build` again after Codex finishes.
+6. At the end, provide a concise summary of files changed, the recap session used, build/check result, and any evidence gaps.
+
+Embedded campaign dashboard prompt:
 EOF
+
+    cat "$DASHBOARD_PROMPT_FILE" >>"$AI_PROMPT_FILE"
 
     print_info "Running Codex CLI non-interactively..."
     print_detail "Prompt file: $AI_PROMPT_FILE"
+    print_detail "Dashboard prompt: $DASHBOARD_PROMPT_FILE"
     print_detail "Report file: $AI_REPORT_FILE"
     echo ""
 

@@ -72,6 +72,7 @@ Show help:
 - Codex must not modify files under `content/Notes/`
 - Merge-back excludes `Notes/`
 - Cross-references, indexes, locations, quests, characters, and timeline pages can be updated by Codex
+- The homepage and campaign dashboard update uses `CAMPAIGN-DASHBOARD-PROMPT.md`, including its five result-scoring iterations
 
 In practice:
 
@@ -81,7 +82,7 @@ In practice:
 ## Files Produced During A Run
 
 - `.sync-log.txt`: exact files imported from Obsidian in the latest run
-- `.codex-sync-prompt.txt`: prompt passed to Codex CLI
+- `.codex-sync-prompt.txt`: prompt passed to Codex CLI, including the embedded campaign dashboard prompt
 - `.codex-sync-report.txt`: Codex CLI output
 - `.merge-back-log.txt`: files merged back into Obsidian
 
