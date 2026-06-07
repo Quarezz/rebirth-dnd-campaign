@@ -14,7 +14,8 @@ Use that command unless you are intentionally working on a legacy script.
 
 It uses:
 
-- `obsidian-cli` to read markdown notes from Obsidian and write markdown notes back
+- `obsidian-cli` to read markdown notes from Obsidian during import
+- direct file copy to merge derived markdown pages back into the local Obsidian campaign folder
 - direct file copy for binary assets like `.png`, `.jpg`, `.jpeg`, `.gif`
 - `codex exec --full-auto` to perform the automated repo update step
 - `npx quartz build` to rebuild the site after Codex changes

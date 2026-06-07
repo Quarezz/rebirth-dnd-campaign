@@ -11,10 +11,12 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 QUARTZ_CONTENT="$PROJECT_ROOT/content"
 if [ -d "/Users/rniko/Documents/CloudVault/DND/Campaigns/Rebirth" ]; then
     OBSIDIAN_VAULT="/Users/rniko/Documents/CloudVault/DND/Campaigns/Rebirth"
+elif [ -d "/home/morf/Documents/CloudVault/DND/Campaigns/Rebirth" ]; then
+    OBSIDIAN_VAULT="/home/morf/Documents/CloudVault/DND/Campaigns/Rebirth"
 elif [ -d "/home/morf/Documents/OVault/DND/Campaigns/Rebirth" ]; then
     OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
 else
-    OBSIDIAN_VAULT="/home/morf/Documents/OVault/DND/Campaigns/Rebirth"
+    OBSIDIAN_VAULT="/home/morf/Documents/CloudVault/DND/Campaigns/Rebirth"
 fi
 MERGE_LOG="$PROJECT_ROOT/.merge-back-log.txt"
 

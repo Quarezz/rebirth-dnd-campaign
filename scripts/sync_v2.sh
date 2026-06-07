@@ -3,8 +3,8 @@
 set -euo pipefail
 
 # End-to-end Obsidian <-> Quartz sync workflow.
-# Markdown notes are transferred via obsidian-cli.
-# Binary attachments still use direct file copies because obsidian-cli 0.2.1 is note-only.
+# Markdown imports are read via obsidian-cli so Obsidian links/paths resolve through the vault.
+# Merge-back and binary attachments use direct file copies to avoid Obsidian URI hangs.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -136,15 +136,6 @@ write_header_log() {
         echo "# Root: $OBSIDIAN_ROOT_PREFIX"
         echo ""
     } >"$file_path"
-}
-
-read_file_preserve_newlines() {
-    local source_file="$1"
-    local marker=$'\001'
-    local content
-
-    content="$(cat "$source_file"; printf '%s' "$marker")"
-    printf '%s' "${content%$marker}"
 }
 
 files_equivalent_for_sync() {
@@ -630,7 +621,7 @@ merge_back_to_obsidian() {
     write_header_log "$MERGE_LOG" "Merge-Back Log"
 
     while IFS= read -r file_path; do
-        local source_file destination_file note_path content
+        local source_file destination_file
 
         [ -z "$file_path" ] && continue
 
@@ -639,17 +630,10 @@ merge_back_to_obsidian() {
 
         if is_markdown_file "$file_path"; then
             create_parent_dir "$destination_file"
-            note_path="$(obsidian_note_path "$file_path")"
-            content="$(read_file_preserve_newlines "$source_file")"
-
-            if obsidian-cli create "$note_path" --vault "$OBSIDIAN_VAULT_NAME" --content "$content" --overwrite >/dev/null; then
-                print_file "[SYNCED NOTE] $file_path"
-                printf '%s\n' "$file_path" >>"$MERGE_LOG"
-                copied_count=$((copied_count + 1))
-            else
-                print_warning "Failed to write note via obsidian-cli: $file_path"
-            fi
-
+            cp "$source_file" "$destination_file"
+            print_file "[SYNCED NOTE] $file_path"
+            printf '%s\n' "$file_path" >>"$MERGE_LOG"
+            copied_count=$((copied_count + 1))
             continue
         fi
 
