@@ -1,8 +1,41 @@
-Оновив базу після імпорту, не редагуючи `content/Notes/`.
+Оновлено похідні сторінки після sync і потім оновлено дашборд/головну. Для recap використано [[Notes/Сесія 61|Сесію 61]]. Найновіша нотатка [[Notes/Сесія 62|Сесія 62]] визнана незначущою для recap, бо містить лише дату та LP.
 
-Зміни:
-- Додав нові сторінки: `Прокляття_Івена`, `Порятунок_Рексара`, `Тор_Буреграй`, `Ніас_Мак_Нілас`, `Хейдра`, `Діжковий_Клин`, `Вишневі_діжки_Локхарта`, `Гай_Дощових_Хмар`.
-- Оновив індекси: `content/index.md`, `content/Персонажі/00_Index.md`, `content/Локації/Всі_локації.md`, `content/Квести/Всі_квести.md`, `content/Хронологія_подій.md`.
-- Оновив пов’язані сторінки Есборга, «Тролів Мосту», Ластівчиних Гнізд, Сталевого Шестеряка, Івена, Рексара, Рувена, Клавеліни, Інонни, Флорібера, Баска, Опал, Підгільчаника, Боріна й Люцерна.
+Змінені файли:
+- `content/index.md`
+- `content/Панель_кампанії.md`
+- `content/Хронологія_подій.md`
+- `content/Квести/Прокляття_Івена.md`
+- `content/Квести/Порятунок_Рексара.md`
+- `content/Квести/Розслідування_Тиші_в_Есборзі.md`
+- `content/Квести/Всі_квести.md`
+- `content/Локації/Гай_Дощових_Хмар.md`
+- `content/Локації/Всі_локації.md`
+- `content/Персонажі/Івен.md`
+- `content/Персонажі/Рексар.md`
+- `content/Персонажі/Тор_Буреграй.md`
+- `content/Персонажі/Фасточка.md`
+- `content/Персонажі/00_Index.md`
+- `content/Персонажі/Нічнопазур.md`
 
-Перевірка: `npm run quartz -- build` пройшов успішно. Були лише попередження про нетрекані імпортовані/нові файли, що впливає на git-дати, а не на збірку.
+П’ять result-scoring ітерацій:
+- `1. Evidence audit` — evidence fidelity `5/5`, decision usefulness `5/5`. Fix decision: без правок по фактах.
+- `2. Recency audit` — recency handling `5/5`. Fix decision: newest meaningful session обрано правильно, `Сесія 62` явно позначена як порожня.
+- `3. Usefulness audit` — decision usefulness `5/5`, scope of recap/detail `5/5`. Fix decision: без правок.
+- `4. Language/link/scope audit` — Ukrainian readability `5/5`, link integrity `5/5`, scope control `5/5` після виправлення. Fix decision: повернуто YAML frontmatter у `content/index.md`, після чого ітерація пройдена.
+- `5. Final holistic audit` — evidence fidelity `5/5`, recency handling `5/5`, decision usefulness `5/5`, Ukrainian readability `5/5`, link integrity `5/5`, scope control `5/5`. Fix decision: готово до build.
+
+Фінальна таблиця оцінок:
+- Evidence fidelity: `5/5`
+- Recency handling: `5/5`
+- Decision usefulness: `5/5`
+- Ukrainian readability: `5/5`
+- Link integrity: `5/5`
+- Scope control: `5/5`
+
+`npx quartz build` пройшов успішно. Звичайний запуск впав через read-only `~/.npm`, тому збірку довелося запускати як `npm_config_cache=/tmp/.npm npx quartz build`; після цього Quartz зібрав `390` файлів без build-помилок.
+
+Попередження й evidence gaps:
+- Точний залишок часу для [[Персонажі/Івен]]а і [[Персонажі/Рексар]]а невідомий; у дашборді збережено невизначеність.
+- Точне розташування місця досліджень [[Персонажі/Ердан]]а в нотатках ще не назване.
+- Секретну ремарку з [[Notes/Сесія 61|Сесії 61]] про посилку не виносив у публічні похідні сторінки.
+- Під час build Quartz попереджав, що багато `content/*` файлів “isn't yet tracked by git”; це не зламало збірку, але може впливати на автодати.
