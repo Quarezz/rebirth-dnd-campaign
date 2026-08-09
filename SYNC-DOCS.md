@@ -17,7 +17,7 @@ It uses:
 - `obsidian-cli` to read markdown notes from Obsidian during import
 - direct file copy to merge derived markdown pages back into the local Obsidian campaign folder
 - direct file copy for binary assets like `.png`, `.jpg`, `.jpeg`, `.gif`
-- `codex exec --full-auto` to perform the automated repo update step
+- `codex exec --dangerously-bypass-approvals-and-sandbox` to perform the automated repo update step
 - `npx quartz build` to rebuild the site after Codex changes
 
 The automated agent in the current workflow is Codex CLI, not Cursor Agent CLI.
@@ -61,7 +61,7 @@ Show help:
 1. Import from Obsidian into `content/`
 2. Write `.sync-log.txt` with the files imported in the current run
 3. Generate `.codex-sync-prompt.txt`
-4. Run `codex exec --full-auto` and save the output to `.codex-sync-report.txt`
+4. Run `codex exec --dangerously-bypass-approvals-and-sandbox` and save the output to `.codex-sync-report.txt`
 5. Build Quartz with `npx quartz build`
 6. Preview merge-back candidates by comparing Quartz content directly against the Obsidian campaign folder
 7. Merge changed or new files back to Obsidian after confirmation, or automatically with `--yes`

@@ -469,7 +469,7 @@ EOF
     print_detail "Report file: $AI_REPORT_FILE"
     echo ""
 
-    if codex exec --full-auto --color never -C "$PROJECT_ROOT" -o "$AI_REPORT_FILE" - <"$AI_PROMPT_FILE"; then
+    if codex exec --dangerously-bypass-approvals-and-sandbox --color never -C "$PROJECT_ROOT" -o "$AI_REPORT_FILE" - <"$AI_PROMPT_FILE"; then
         print_success "Codex update completed"
     else
         print_error "Codex update failed"
