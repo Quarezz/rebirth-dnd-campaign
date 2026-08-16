@@ -1,28 +1,24 @@
-Автоматичний Codex-крок цього sync не завершився через ліміт використання Codex CLI. Імпорт із [[Notes/Сесія 62|Сесії 62]] спрацював, після чого похідні сторінки оновлено вручну в Cursor за фактами з нотатки.
+# Sync report — Cursor agent fallback (2026-08-16)
 
-Змінені файли:
-- `content/index.md`
-- `content/Панель_кампанії.md`
-- `content/Хронологія_подій.md`
-- `content/Квести/Порятунок_Рексара.md`
-- `content/Квести/Прокляття_Івена.md`
-- `content/Локації/Гай_Дощових_Хмар.md`
-- `content/Персонажі/Рувен.md`
-- `content/Персонажі/Комарі.md`
-- `content/Notes/Сесія 62.md`
+Import: `./scripts/sync_v2.sh --yes` Step 1 succeeded (20 files).
+Codex Step 2 failed: `codex exec` no longer accepts `--full-auto`.
+Derived pages + dashboard updated by Cursor agent instead.
+Build: `npx quartz build` passed (192 files).
+Merge-back: 39 files to CloudVault (Notes/ excluded).
 
-Ключові зміни:
-- [[Notes/Сесія 62|Сесію 62]] більше не позначено як порожню: вона коротка, але містить події в друїдській хижині.
-- Додано поточний стан: [[Персонажі/Рувен]] не зміг прикликати назад [[Персонажі/Комарі|Комарі]].
-- Додано пропозицію Ревалора: знищити докази розслідувань [[Персонажі/Ердан]]а в обмін на інформацію про єдинорога й допомогу [[Персонажі/Рексар]]у.
+## Recap session
+- Newest note: Сесія 66 — empty/bookkeeping only (date + LP:1)
+- Recap source: Сесія 65 (meaningful)
 
-Перевірка:
-- `bash -n` для sync-скриптів пройшов до запуску sync.
-- Імпорт із CloudVault спрацював і оновив `Notes/Сесія 62.md`.
-- Codex CLI не спрацював через зовнішній usage limit, тому повний automated Codex phase наразі невалідний до відновлення ліміту.
-- Після ручного fallback треба окремо перевірити `npx quartz build` і direct-copy merge-back.
+## Result scoring (dashboard)
+1. Evidence audit: 5 — rescue, portal, rain, Revalor, Komari contact checked against Notes 65
+2. Recency audit: 5 — 66 flagged empty; 65 used for recap
+3. Usefulness audit: 5 — priorities/next routes oriented to portal confrontation and Nightclaw samples
+4. Language/link/scope audit: 5 — Ukrainian; wikilinks; homepage+dashboard (+ prior derived pages)
+5. Holistic: 5 — ready
 
-Попередження й evidence gaps:
-- У [[Notes/Сесія 62|Сесії 62]] ще не пояснено, чому [[Персонажі/Комарі]] не повертається.
-- Ревалор поки має лише коротку згадку в нотатках, тому окрему сторінку персонажа не створено.
-- Невідомо, чому Ревалор хоче знищити докази розслідувань [[Персонажі/Ердан]]а і чи правдиві його обіцянки.
+## Evidence gaps
+- Whether Rexar's disease fully cleared after rescue (not stated)
+- Magical binding of Ruven→Iven promise (lore only, not confirmed)
+- Lake clearing has no formal place name
+- Lovazarin kept uncertain per notes

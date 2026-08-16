@@ -17,10 +17,10 @@ It uses:
 - `obsidian-cli` to read markdown notes from Obsidian during import
 - direct file copy to merge derived markdown pages back into the local Obsidian campaign folder
 - direct file copy for binary assets like `.png`, `.jpg`, `.jpeg`, `.gif`
-- `codex exec --full-auto` to perform the automated repo update step
-- `npx quartz build` to rebuild the site after Codex changes
+- `cursor-agent --print --force --trust` to perform the automated repo update step
+- `npx quartz build` to rebuild the site after Cursor Agent changes
 
-The automated agent in the current workflow is Codex CLI, not Cursor Agent CLI.
+The automated agent in the current workflow is Cursor Agent CLI, using Cursor Grok 4.6 (`cursor-grok-4.6-high`) by default.
 
 ## Recommended Commands
 
@@ -60,8 +60,8 @@ Show help:
 
 1. Import from Obsidian into `content/`
 2. Write `.sync-log.txt` with the files imported in the current run
-3. Generate `.codex-sync-prompt.txt`
-4. Run `codex exec --full-auto` and save the output to `.codex-sync-report.txt`
+3. Generate `.cursor-sync-prompt.txt`
+4. Run `cursor-agent` with Cursor Grok 4.6 and save the output to `.cursor-sync-report.txt`
 5. Build Quartz with `npx quartz build`
 6. Preview merge-back candidates by comparing Quartz content directly against the Obsidian campaign folder
 7. Merge changed or new files back to Obsidian after confirmation, or automatically with `--yes`
@@ -70,9 +70,9 @@ Show help:
 ## Source Of Truth Rules
 
 - `content/Notes/` is treated as source-of-truth content imported from Obsidian session notes
-- Codex must not modify files under `content/Notes/`
+- Cursor Agent must not modify files under `content/Notes/`
 - Merge-back excludes `Notes/`
-- Cross-references, indexes, locations, quests, characters, and timeline pages can be updated by Codex
+- Cross-references, indexes, locations, quests, characters, and timeline pages can be updated by Cursor Agent
 - The homepage and campaign dashboard update uses `CAMPAIGN-DASHBOARD-PROMPT.md`, including its five result-scoring iterations
 
 In practice:
@@ -83,8 +83,8 @@ In practice:
 ## Files Produced During A Run
 
 - `.sync-log.txt`: exact files imported from Obsidian in the latest run
-- `.codex-sync-prompt.txt`: prompt passed to Codex CLI, including the embedded campaign dashboard prompt
-- `.codex-sync-report.txt`: Codex CLI output
+- `.cursor-sync-prompt.txt`: prompt passed to Cursor Agent, including the embedded campaign dashboard prompt
+- `.cursor-sync-report.txt`: Cursor Agent CLI output
 - `.merge-back-log.txt`: files merged back into Obsidian
 
 ## Environment Overrides
@@ -95,6 +95,13 @@ If your Obsidian vault path or name differs, override these variables:
 OBSIDIAN_VAULT_NAME=CloudVault
 OBSIDIAN_ROOT_PREFIX=DND/Campaigns/Rebirth
 OBSIDIAN_PROJECT_ROOT="$HOME/Documents/CloudVault/DND/Campaigns/Rebirth"
+```
+
+To change the agent binary or model:
+
+```bash
+CURSOR_AGENT=cursor-agent
+CURSOR_MODEL=cursor-grok-4.6-high
 ```
 
 Example:
@@ -112,7 +119,7 @@ These exist, but they are not the primary workflow anymore:
   - documentation and prompts still describe manual Cursor processing
 - `./scripts/sync-obsidian.sh`
   - older import-oriented flow
-  - its `--auto-update` mode prepares a prompt for manual chat use rather than calling Codex CLI directly
+  - its `--auto-update` mode prepares a prompt for manual chat use rather than calling Cursor Agent directly
 - `./scripts/merge-back-obsidian.sh`
   - standalone merge-back helper
   - useful if you only want to export Quartz changes into Obsidian
@@ -125,7 +132,7 @@ Missing dependencies:
 
 ```bash
 obsidian-cli --version
-codex --version
+cursor-agent --version
 npx quartz --help
 ```
 
