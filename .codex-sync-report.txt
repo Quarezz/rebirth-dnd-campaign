@@ -1,8 +1,24 @@
-Оновлено 14 файлів:
+# Sync report — Cursor agent fallback (2026-08-16)
 
-- Головні сторінки: `content/index.md`, `content/Панель_кампанії.md`, `content/Хронологія_подій.md`.
-- Локації: створено `Місце_досліджень_Ердана.md`, оновлено `Гай_Дощових_Хмар.md` і `Всі_локації.md`.
-- Персонажі: оновлено Івена, Комарі, Рексара, Рувена та індекс персонажів.
-- Квести: оновлено «Порятунок Рексара», «Прокляття Івена» та індекс квестів.
+Import: `./scripts/sync_v2.sh --yes` Step 1 succeeded (20 files).
+Codex Step 2 failed: `codex exec` no longer accepts `--full-auto`.
+Derived pages + dashboard updated by Cursor agent instead.
+Build: `npx quartz build` passed (192 files).
+Merge-back: 39 files to CloudVault (Notes/ excluded).
 
-Відображено події Сесій 62–64; Сесію 65 позначено як неповну. `content/Notes/` не змінював. Збірка Quartz пройшла успішно.
+## Recap session
+- Newest note: Сесія 66 — empty/bookkeeping only (date + LP:1)
+- Recap source: Сесія 65 (meaningful)
+
+## Result scoring (dashboard)
+1. Evidence audit: 5 — rescue, portal, rain, Revalor, Komari contact checked against Notes 65
+2. Recency audit: 5 — 66 flagged empty; 65 used for recap
+3. Usefulness audit: 5 — priorities/next routes oriented to portal confrontation and Nightclaw samples
+4. Language/link/scope audit: 5 — Ukrainian; wikilinks; homepage+dashboard (+ prior derived pages)
+5. Holistic: 5 — ready
+
+## Evidence gaps
+- Whether Rexar's disease fully cleared after rescue (not stated)
+- Magical binding of Ruven→Iven promise (lore only, not confirmed)
+- Lake clearing has no formal place name
+- Lovazarin kept uncertain per notes
