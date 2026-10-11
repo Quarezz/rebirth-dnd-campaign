@@ -1,55 +1,52 @@
-Session 68 is the recap source. It is a full note of a missed session, not an empty date line. The party is back in the Grove of Rainy Clouds: Nightclaw is unconscious, the ward against other worlds is weakening, and a debate has already started.
+Session 68 is a full note, and the vault now follows its ending: the debate is won, Iven is unconscious, and the prayer for Nightclaw has no recorded result.
+
+## Recap source
+
+The latest sync imported `content/index.md` and `content/Notes/Сесія 68.md`. Session 68 (11.10.2026) is the newest session and it is meaningful. There is no newer empty note. The recap uses this session. Notes were not edited.
+
+## What changed in play
+
+The druids of Rain Cloud Grove were convinced to follow Corellon. No new archdruid is named, Nightclaw is still unconscious, and the party has started praying for her. Iven broke a promise to Corellon by saying they had met her; he is unconscious. Kelanik says it was a seizure and that Iven never spoke with her. The latest line labeled as the LP pool is **12** (it was 13 at the start of the debate).
 
 ## Files changed
 
 Derived pages:
 
-- `content/Персонажі/Ревалор.md`
-- `content/Персонажі/Нічнопазур.md`
-- `content/Персонажі/Івен.md`
-- `content/Персонажі/Келанік.md`
-- `content/Персонажі/Рувен.md`
-- `content/Персонажі/Беніта.md`
-- `content/Персонажі/00_Index.md`
-- `content/Локації/Гай_Дощових_Хмар.md`
-- `content/Локації/Всі_локації.md`
-- `content/Квести/Порятунок_Рексара.md`
-- `content/Квести/Прокляття_Івена.md`
-- `content/Квести/Розслідування_Тиші_в_Есборзі.md`
-- `content/Квести/Всі_квести.md`
 - `content/Хронологія_подій.md`
 - `content/Чекліст_Рувена_перед_сесією.md`
+- `content/Полемічна бійка.md`
+- `content/Персонажі/00_Index.md`, `Івен.md`, `Келанік.md`, `Рувен.md`, `Ревалор.md`, `Нічнопазур.md`
+- `content/Локації/Гай_Дощових_Хмар.md`, `content/Локації/Всі_локації.md`
+- `content/Квести/Прокляття_Івена.md`, `Порятунок_Рексара.md`, `Розслідування_Тиші_в_Есборзі.md`, `Всі_квести.md`
 
 Dashboard phase:
 
 - `content/index.md`
 - `content/Панель_кампанії.md`
 
-`content/Notes/Сесія 68.md` was the imported source and was not edited.
+The checklist keeps the compact entity format. The active block is 70 physical lines and 44 checkboxes. The checkbox cap holds. The line target is 40–60, and the extra lines are older valid reminders that were kept.
 
-## Recap session
+## Result scores
 
-**Session 68** (11.10.2026, LP: 0). The newest note is meaningful. It records the missed session: Revalor’s fey service, his mother in a coma, a debt of 3 offerings, the return of Nightclaw’s chain, unicorn warnings, and the start of the debate after Kelanik proposed prayer to Corellon.
-
-## Result-scoring iterations
-
-| Iteration | Scores | Fix |
+| Iteration | Score | Fix |
 | --- | --- | --- |
-| 1. Evidence | First pass: evidence 3. Rerun: evidence 5 | Removed the claim that Revalor personally gave the unicorn account, and the claim that the debate itself elects the archdruid |
-| 2. Recency | Recency 5 | None. Session 68 is the newest file and contains events |
-| 3. Usefulness | Usefulness 5 | None. Next scene is the debate; other routes stay secondary |
-| 4. Language, links, scope | First pass: Ukrainian 3, links 3. Rerun: Ukrainian 5, links 5, scope 5 | Replaced an awkward verb and restored normal wikilink aliases in tables |
-| 5. Holistic | All criteria 5 | Ready to build |
+| 1. Evidence | 3, then 5 after the rerun | Corrected the chain: it was returned and put on Nightclaw. Quoted Kelanik’s claim without adding an audience. |
+| 2. Recency | 5 | None. Session 68 is the newest meaningful note. |
+| 3. Usefulness | 5 | None. Next actions are the prayer, Iven’s two versions, and the unnamed archdruid. |
+| 4. Language, links, scope | Ukrainian 4, links 5, scope 5 | None. Table links have no aliases, so the columns stay intact. |
+| 5. Holistic | Evidence 5, recency 5, usefulness 5, Ukrainian 4, links 5, scope 5 | Ready to build. |
 
-Final scores: evidence 5, recency 5, usefulness 5, Ukrainian 5, links 5, scope 5.
+## Build
 
-`npx quartz build` passed: 196 files parsed, 417 emitted.
+`npx quartz build` passed: 196 Markdown files parsed, 417 files emitted.
 
 ## Evidence gaps
 
-- The note does not name who gave the unicorn account. It conflicts with Benita in Session 62.
-- It does not say whether Nightclaw’s chain is the one Iven took from the package in Session 61, or whether she is the supreme druid.
-- There is no countdown for the weakening ward or for the 3 offerings.
-- The debate has no winner, and no new archdruid is named.
-- Rexar is not mentioned. His Giant Badger form is only the Session 67 result.
-- The angel-coin bargain still has no recorded terms.
+- The prayer has no outcome. No archdruid is named. Nothing says the new faith stops the weakening of the grove’s protection, and there is no countdown.
+- Iven’s promise to Corellon has no recorded terms.
+- The unicorn speaker is unnamed, and that account still conflicts with Benita in Session 62.
+- It is not stated whether Nightclaw’s chain is the one from Session 61, or whose mother Revalor meant.
+- The druids’ “breach” is not explained.
+- `LP: 2 (1+1)` is not labeled as the pool, so the checklist uses pool **12**.
+- Rexar is absent from Session 68, so he stays a Giant Badger from Session 67.
+- There is no `Кореліон` page. `Корелія.md` uses a different name, and the notes do not identify them as the same figure, so those pages were not merged.
