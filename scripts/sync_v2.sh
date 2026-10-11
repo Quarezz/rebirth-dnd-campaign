@@ -11,14 +11,15 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 QUARTZ_CONTENT="$PROJECT_ROOT/content"
 SYNC_LOG="$PROJECT_ROOT/.sync-log.txt"
 MERGE_LOG="$PROJECT_ROOT/.merge-back-log.txt"
-AI_PROMPT_FILE="$PROJECT_ROOT/.codex-sync-prompt.txt"
-AI_REPORT_FILE="$PROJECT_ROOT/.codex-sync-report.txt"
+AI_PROMPT_FILE="$PROJECT_ROOT/.cursor-sync-prompt.txt"
+AI_REPORT_FILE="$PROJECT_ROOT/.cursor-sync-report.txt"
 DASHBOARD_PROMPT_FILE="$PROJECT_ROOT/CAMPAIGN-DASHBOARD-PROMPT.md"
 
 OBSIDIAN_VAULT_NAME="${OBSIDIAN_VAULT_NAME:-CloudVault}"
 OBSIDIAN_ROOT_PREFIX="${OBSIDIAN_ROOT_PREFIX:-DND/Campaigns/Rebirth}"
 OBSIDIAN_PROJECT_ROOT="${OBSIDIAN_PROJECT_ROOT:-$HOME/Documents/CloudVault/DND/Campaigns/Rebirth}"
-SYNC_AGENT_MODEL="${SYNC_AGENT_MODEL:-grok-4.7-high}"
+CURSOR_AGENT="${CURSOR_AGENT:-cursor-agent}"
+CURSOR_MODEL="${CURSOR_MODEL:-grok-4.7-high}"
 
 FORCE_MODE=false
 AUTO_APPROVE=false
@@ -84,7 +85,8 @@ Environment overrides:
   OBSIDIAN_VAULT_NAME    Default: CloudVault
   OBSIDIAN_ROOT_PREFIX   Default: DND/Campaigns/Rebirth
   OBSIDIAN_PROJECT_ROOT  Default: \$HOME/Documents/CloudVault/DND/Campaigns/Rebirth
-  SYNC_AGENT_MODEL       Cursor Agent model used for the update step.
+  CURSOR_AGENT           Cursor Agent CLI binary. Default: cursor-agent
+  CURSOR_MODEL           Cursor Agent model used for the update step.
                          Default: grok-4.7-high
 EOF
 }
@@ -167,7 +169,7 @@ files_equivalent_for_sync() {
 
 check_prerequisites() {
     require_command "obsidian-cli"
-    require_command "cursor-agent"
+    require_command "$CURSOR_AGENT"
     require_command "npx"
     require_command "git"
 
@@ -407,11 +409,11 @@ import_from_obsidian() {
     IMPORTED_FILE_COUNT="$changed_count"
 }
 
-run_agent_update() {
-    print_header "STEP 2: AI Agent Update"
+run_cursor_update() {
+    print_header "STEP 2: Cursor Agent Update"
 
     if [ "${IMPORTED_FILE_COUNT:-0}" -eq 0 ]; then
-        print_info "Skipping agent update because no files changed during import"
+        print_info "Skipping Cursor Agent update because no files changed during import"
         echo ""
         return 0
     fi
@@ -468,16 +470,17 @@ EOF
     cat "$DASHBOARD_PROMPT_FILE" >>"$AI_PROMPT_FILE"
 
     print_info "Running Cursor Agent non-interactively..."
-    print_detail "Model: $SYNC_AGENT_MODEL"
+    print_detail "Agent: $CURSOR_AGENT"
+    print_detail "Model: $CURSOR_MODEL"
     print_detail "Prompt file: $AI_PROMPT_FILE"
     print_detail "Dashboard prompt: $DASHBOARD_PROMPT_FILE"
     print_detail "Report file: $AI_REPORT_FILE"
     echo ""
 
-    if cursor-agent --print --force --model "$SYNC_AGENT_MODEL" --workspace "$PROJECT_ROOT" "$(cat "$AI_PROMPT_FILE")" >"$AI_REPORT_FILE"; then
-        print_success "Agent update completed"
+    if "$CURSOR_AGENT" --print --force --trust --workspace "$PROJECT_ROOT" --model "$CURSOR_MODEL" --output-format text "$(cat "$AI_PROMPT_FILE")" | tee "$AI_REPORT_FILE"; then
+        print_success "Cursor Agent update completed"
     else
-        print_error "Agent update failed"
+        print_error "Cursor Agent update failed"
         exit 1
     fi
 
@@ -666,7 +669,7 @@ print_summary() {
         print_success "Dry-run merge-back preview finished"
     else
         print_success "Import finished"
-        print_success "Agent processing finished"
+        print_success "Cursor Agent processing finished"
         print_success "Quartz build finished"
         print_success "Merge-back preview finished"
     fi
@@ -677,7 +680,7 @@ print_summary() {
         print_info "Dry run did not write sync logs or agent report files"
     else
         print_info "Sync log: $SYNC_LOG"
-        print_info "Agent report: $AI_REPORT_FILE"
+        print_info "Cursor Agent report: $AI_REPORT_FILE"
     fi
     echo ""
 
@@ -729,7 +732,7 @@ main() {
     fi
     check_obsidian_git_status
     import_from_obsidian
-    run_agent_update
+    run_cursor_update
     build_quartz
     preview_merge_back
     merge_back_to_obsidian
