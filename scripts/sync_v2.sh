@@ -14,6 +14,7 @@ MERGE_LOG="$PROJECT_ROOT/.merge-back-log.txt"
 AI_PROMPT_FILE="$PROJECT_ROOT/.cursor-sync-prompt.txt"
 AI_REPORT_FILE="$PROJECT_ROOT/.cursor-sync-report.txt"
 DASHBOARD_PROMPT_FILE="$PROJECT_ROOT/CAMPAIGN-DASHBOARD-PROMPT.md"
+CHECKLIST_PROMPT_FILE="$PROJECT_ROOT/CHECKLIST-CONTRACT.md"
 
 OBSIDIAN_VAULT_NAME="${OBSIDIAN_VAULT_NAME:-CloudVault}"
 OBSIDIAN_ROOT_PREFIX="${OBSIDIAN_ROOT_PREFIX:-DND/Campaigns/Rebirth}"
@@ -436,6 +437,11 @@ run_cursor_update() {
         exit 1
     fi
 
+    if [ ! -f "$CHECKLIST_PROMPT_FILE" ]; then
+        print_error "Checklist contract not found: $CHECKLIST_PROMPT_FILE"
+        exit 1
+    fi
+
     cat >"$AI_PROMPT_FILE" <<'EOF'
 You are updating a Ukrainian D&D campaign knowledge base after an Obsidian import.
 
@@ -457,7 +463,7 @@ Global requirements:
 
 Required workflow:
 1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, chronology, and the pre-session checklist.
-2. The pre-session checklist `content/Чекліст_Рувена_перед_сесією.md` must always be updated when session notes changed. Refresh it so it reflects the current state before the next session (LP, active effects, items, franchise notes, quests, and urgent reminders).
+2. The pre-session checklist `content/Чекліст_Рувена_перед_сесією.md` must always be updated when session notes changed, following the checklist contract embedded below. Keep its compact entity-section format; do not revert it to long-form prose.
 3. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
 4. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
 5. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
@@ -468,6 +474,12 @@ Embedded campaign dashboard prompt:
 EOF
 
     cat "$DASHBOARD_PROMPT_FILE" >>"$AI_PROMPT_FILE"
+
+    {
+        echo ""
+        echo "Embedded checklist contract:"
+        cat "$CHECKLIST_PROMPT_FILE"
+    } >>"$AI_PROMPT_FILE"
 
     print_info "Running Cursor Agent non-interactively..."
     print_detail "Agent: $CURSOR_AGENT"
