@@ -1,8 +1,40 @@
-Оновлено 14 файлів:
+The vault now follows sessions 66–67. Session 68 is only a date and LP, so the recap is session 67.
 
-- Головні сторінки: `content/index.md`, `content/Панель_кампанії.md`, `content/Хронологія_подій.md`.
-- Локації: створено `Місце_досліджень_Ердана.md`, оновлено `Гай_Дощових_Хмар.md` і `Всі_локації.md`.
-- Персонажі: оновлено Івена, Комарі, Рексара, Рувена та індекс персонажів.
-- Квести: оновлено «Порятунок Рексара», «Прокляття Івена» та індекс квестів.
+## Files changed
 
-Відображено події Сесій 62–64; Сесію 65 позначено як неповну. `content/Notes/` не змінював. Збірка Quartz пройшла успішно.
+Derived pages: `Персонажі/Королівський_ловчий.md` (new), `Рексар.md`, `Ревалор.md`, `Рувен.md`, `Келанік.md`, `Івен.md`, `00_Index.md`, `Квести/Порятунок_Рексара.md`, `Прокляття_Івена.md`, `Розслідування_Тиші_в_Есборзі.md`, `Всі_квести.md`, `Локації/Гай_Дощових_Хмар.md`, `Місце_досліджень_Ердана.md`, `Всі_локації.md`, `Хронологія_подій.md`, `Чекліст_Рувена_перед_сесією.md`.
+
+Dashboard: `content/index.md`, `content/Панель_кампанії.md`.
+
+`content/Notes/` was not edited.
+
+## Recap session
+
+Newest note is **session 68** (11.10.2026, LP: 0). It is bookkeeping only. The recap uses **session 67**, with session 66 as context. The checklist is set for the start of session 68.
+
+## Result scores
+
+Draft before editing: evidence 5, recency 5, usefulness 5, Ukrainian 5, links 5, scope 5.
+
+| Iteration | Scores | Fix |
+| --- | --- | --- |
+| 1. Evidence | Evidence 3, then 5 | Softened the fey identification, the angelic-coin spend, and the moose crest. Rerun passed. |
+| 2. Recency | Recency 5 | Session 68 stays empty; recap stays on 67. No change. |
+| 3. Usefulness | Usefulness 4, then 5 | Replaced a meta timer line with the actual gap: bracelet days are not in the notes. Rerun passed. |
+| 4. Language, links, scope | Ukrainian 4, then 5; links 5; scope 5 | Corrected «Іти» to «Йти». All dashboard wikilinks resolve. Dashboard edits stayed on the two allowed files. |
+| 5. Holistic | Evidence 5, recency 5, usefulness 5, Ukrainian 5, links 5, scope 5 | Ready to build. |
+
+## Build
+
+`npx quartz build` passed. Quartz warned that dates will be inaccurate for untracked files, including sessions 66–68, Ревалор, Беніта, the huntsman page, and `Полемічна бійка.md`.
+
+## Evidence gaps
+
+- The angelic-coin deal with Ревалор has no recorded terms. Session 55 gave Рувен and Рексар one coin each; the pre-session-66 checklist had Рувен at 0/0 and Рексар at 1/0. Which coin was used is not in the notes.
+- Whether the ritual left a lasting effect on Келанік is not stated. Рексар is a Giant Badger; the notes do not say the illness is fully gone.
+- The huntsman’s name and house are unknown. There is no countdown for revenge, only Ревалор’s line that the moose’s death will probably not be forgiven.
+- Rain decreased in session 66 and is not mentioned in session 67. The portal was already gone.
+- The moose’s mail has possible traces of a crest. The notes do not say the party took it.
+- Івен’s charm and his potions are unfinished in the notes. Bracelet charges are still unknown.
+- The five poisoned arrows for two days were checklist timing from before session 66, not a session-note effect, and that window is past.
+- `Полемічна бійка.md` came in with the sync and is not tied to sessions 64–68, so it was left out of the campaign state.

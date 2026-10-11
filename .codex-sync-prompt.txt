@@ -17,12 +17,13 @@ Global requirements:
 - Preserve existing style and link conventions.
 
 Required workflow:
-1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, and chronology.
-2. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
-3. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
-4. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
-5. Run any build/check commands required by the embedded dashboard prompt. The outer sync script will run `npx quartz build` again after Codex finishes.
-6. At the end, provide a concise summary of files changed, the recap session used, build/check result, and any evidence gaps.
+1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, chronology, and the pre-session checklist.
+2. The pre-session checklist `content/Чекліст_Рувена_перед_сесією.md` must always be updated when session notes changed. Refresh it so it reflects the current state before the next session (LP, active effects, items, franchise notes, quests, and urgent reminders).
+3. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
+4. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
+5. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
+6. Run any build/check commands required by the embedded dashboard prompt. The outer sync script will run `npx quartz build` again after the agent finishes.
+7. At the end, provide a concise summary of files changed, the recap session used, build/check result, and any evidence gaps.
 
 Embedded campaign dashboard prompt:
 # Campaign Dashboard Update Prompt
