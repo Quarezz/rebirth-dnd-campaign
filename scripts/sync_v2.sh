@@ -18,6 +18,7 @@ DASHBOARD_PROMPT_FILE="$PROJECT_ROOT/CAMPAIGN-DASHBOARD-PROMPT.md"
 OBSIDIAN_VAULT_NAME="${OBSIDIAN_VAULT_NAME:-CloudVault}"
 OBSIDIAN_ROOT_PREFIX="${OBSIDIAN_ROOT_PREFIX:-DND/Campaigns/Rebirth}"
 OBSIDIAN_PROJECT_ROOT="${OBSIDIAN_PROJECT_ROOT:-$HOME/Documents/CloudVault/DND/Campaigns/Rebirth}"
+SYNC_AGENT_MODEL="${SYNC_AGENT_MODEL:-grok-4.7-high}"
 
 FORCE_MODE=false
 AUTO_APPROVE=false
@@ -83,6 +84,8 @@ Environment overrides:
   OBSIDIAN_VAULT_NAME    Default: CloudVault
   OBSIDIAN_ROOT_PREFIX   Default: DND/Campaigns/Rebirth
   OBSIDIAN_PROJECT_ROOT  Default: \$HOME/Documents/CloudVault/DND/Campaigns/Rebirth
+  SYNC_AGENT_MODEL       Cursor Agent model used for the update step.
+                         Default: grok-4.7-high
 EOF
 }
 
@@ -164,7 +167,7 @@ files_equivalent_for_sync() {
 
 check_prerequisites() {
     require_command "obsidian-cli"
-    require_command "codex"
+    require_command "cursor-agent"
     require_command "npx"
     require_command "git"
 
@@ -404,17 +407,17 @@ import_from_obsidian() {
     IMPORTED_FILE_COUNT="$changed_count"
 }
 
-run_codex_update() {
-    print_header "STEP 2: Codex Update"
+run_agent_update() {
+    print_header "STEP 2: AI Agent Update"
 
     if [ "${IMPORTED_FILE_COUNT:-0}" -eq 0 ]; then
-        print_info "Skipping Codex update because no files changed during import"
+        print_info "Skipping agent update because no files changed during import"
         echo ""
         return 0
     fi
 
     if [ "$DRY_RUN" = true ]; then
-        print_info "Dry run: Codex would process the imported file set and update references/index pages"
+        print_info "Dry run: Cursor Agent would process the imported file set and update references/index pages"
         print_detail "No prompt/report files were written"
         if [ -n "$IMPORTED_CANDIDATES_FILE" ] && [ -s "$IMPORTED_CANDIDATES_FILE" ]; then
             echo ""
@@ -451,28 +454,30 @@ Global requirements:
 - Preserve existing style and link conventions.
 
 Required workflow:
-1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, and chronology.
-2. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
-3. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
-4. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
-5. Run any build/check commands required by the embedded dashboard prompt. The outer sync script will run `npx quartz build` again after Codex finishes.
-6. At the end, provide a concise summary of files changed, the recap session used, build/check result, and any evidence gaps.
+1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, chronology, and the pre-session checklist.
+2. The pre-session checklist `content/Чекліст_Рувена_перед_сесією.md` must always be updated when session notes changed. Refresh it so it reflects the current state before the next session (LP, active effects, items, franchise notes, quests, and urgent reminders).
+3. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
+4. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
+5. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
+6. Run any build/check commands required by the embedded dashboard prompt. The outer sync script will run `npx quartz build` again after the agent finishes.
+7. At the end, provide a concise summary of files changed, the recap session used, build/check result, and any evidence gaps.
 
 Embedded campaign dashboard prompt:
 EOF
 
     cat "$DASHBOARD_PROMPT_FILE" >>"$AI_PROMPT_FILE"
 
-    print_info "Running Codex CLI non-interactively..."
+    print_info "Running Cursor Agent non-interactively..."
+    print_detail "Model: $SYNC_AGENT_MODEL"
     print_detail "Prompt file: $AI_PROMPT_FILE"
     print_detail "Dashboard prompt: $DASHBOARD_PROMPT_FILE"
     print_detail "Report file: $AI_REPORT_FILE"
     echo ""
 
-    if codex exec --dangerously-bypass-approvals-and-sandbox --color never -C "$PROJECT_ROOT" -o "$AI_REPORT_FILE" - <"$AI_PROMPT_FILE"; then
-        print_success "Codex update completed"
+    if cursor-agent --print --force --model "$SYNC_AGENT_MODEL" --workspace "$PROJECT_ROOT" "$(cat "$AI_PROMPT_FILE")" >"$AI_REPORT_FILE"; then
+        print_success "Agent update completed"
     else
-        print_error "Codex update failed"
+        print_error "Agent update failed"
         exit 1
     fi
 
@@ -483,7 +488,7 @@ build_quartz() {
     print_header "STEP 3: Build Quartz"
 
     if [ "$DRY_RUN" = true ]; then
-        print_info "Dry run: would run \`npx quartz build\` after Codex finishes"
+        print_info "Dry run: would run \`npx quartz build\` after the agent finishes"
         echo ""
         return 0
     fi
@@ -560,7 +565,7 @@ preview_merge_back() {
     print_info "Notes under Notes/ are excluded from merge-back"
     if [ "$DRY_RUN" = true ]; then
         print_warning "Dry run preview reflects the current Quartz workspace only"
-        print_warning "Import/Codex/build changes were not applied, so final merge-back candidates may differ"
+        print_warning "Import/agent/build changes were not applied, so final merge-back candidates may differ"
     fi
     echo ""
 
@@ -656,12 +661,12 @@ print_summary() {
     print_header "WORKFLOW COMPLETE"
     if [ "$DRY_RUN" = true ]; then
         print_success "Dry-run import analysis finished"
-        print_success "Dry-run Codex planning finished"
+        print_success "Dry-run agent planning finished"
         print_success "Dry-run build planning finished"
         print_success "Dry-run merge-back preview finished"
     else
         print_success "Import finished"
-        print_success "Codex processing finished"
+        print_success "Agent processing finished"
         print_success "Quartz build finished"
         print_success "Merge-back preview finished"
     fi
@@ -669,10 +674,10 @@ print_summary() {
     print_info "Vault path: $OBSIDIAN_PROJECT_ROOT"
     print_info "Quartz path: $QUARTZ_CONTENT"
     if [ "$DRY_RUN" = true ]; then
-        print_info "Dry run did not write sync logs or Codex report files"
+        print_info "Dry run did not write sync logs or agent report files"
     else
         print_info "Sync log: $SYNC_LOG"
-        print_info "Codex report: $AI_REPORT_FILE"
+        print_info "Agent report: $AI_REPORT_FILE"
     fi
     echo ""
 
@@ -724,7 +729,7 @@ main() {
     fi
     check_obsidian_git_status
     import_from_obsidian
-    run_codex_update
+    run_agent_update
     build_quartz
     preview_merge_back
     merge_back_to_obsidian

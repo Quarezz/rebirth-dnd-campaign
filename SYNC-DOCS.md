@@ -17,10 +17,10 @@ It uses:
 - `obsidian-cli` to read markdown notes from Obsidian during import
 - direct file copy to merge derived markdown pages back into the local Obsidian campaign folder
 - direct file copy for binary assets like `.png`, `.jpg`, `.jpeg`, `.gif`
-- `codex exec --dangerously-bypass-approvals-and-sandbox` to perform the automated repo update step
-- `npx quartz build` to rebuild the site after Codex changes
+- `cursor-agent --print --force` with Grok 4.7 (default model `grok-4.7-high`) to perform the automated repo update step
+- `npx quartz build` to rebuild the site after the agent changes
 
-The automated agent in the current workflow is Codex CLI, not Cursor Agent CLI.
+The automated agent in the current workflow is the Cursor Agent CLI running Grok 4.7. Override the model with `SYNC_AGENT_MODEL` if needed.
 
 ## Recommended Commands
 
@@ -61,7 +61,7 @@ Show help:
 1. Import from Obsidian into `content/`
 2. Write `.sync-log.txt` with the files imported in the current run
 3. Generate `.codex-sync-prompt.txt`
-4. Run `codex exec --dangerously-bypass-approvals-and-sandbox` and save the output to `.codex-sync-report.txt`
+4. Run `cursor-agent --print --force --model "$SYNC_AGENT_MODEL"` and save the output to `.codex-sync-report.txt`
 5. Build Quartz with `npx quartz build`
 6. Preview merge-back candidates by comparing Quartz content directly against the Obsidian campaign folder
 7. Merge changed or new files back to Obsidian after confirmation, or automatically with `--yes`
@@ -95,12 +95,14 @@ If your Obsidian vault path or name differs, override these variables:
 OBSIDIAN_VAULT_NAME=CloudVault
 OBSIDIAN_ROOT_PREFIX=DND/Campaigns/Rebirth
 OBSIDIAN_PROJECT_ROOT="$HOME/Documents/CloudVault/DND/Campaigns/Rebirth"
+SYNC_AGENT_MODEL=grok-4.7-high
 ```
 
 Example:
 
 ```bash
 OBSIDIAN_PROJECT_ROOT="/path/to/Rebirth" ./scripts/sync_v2.sh
+SYNC_AGENT_MODEL=grok-4.7-xhigh ./scripts/sync_v2.sh
 ```
 
 ## Legacy Scripts
@@ -125,7 +127,7 @@ Missing dependencies:
 
 ```bash
 obsidian-cli --version
-codex --version
+cursor-agent --version
 npx quartz --help
 ```
 
