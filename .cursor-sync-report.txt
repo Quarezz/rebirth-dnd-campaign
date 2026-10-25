@@ -1,52 +1,83 @@
-Session 68 is a full note, and the vault now follows its ending: the debate is won, Iven is unconscious, and the prayer for Nightclaw has no recorded result.
+# Звіт синхронізації Сесії 68
 
-## Recap source
+Оновлення виконав Codex; cursor-agent не запускався.
 
-The latest sync imported `content/index.md` and `content/Notes/Сесія 68.md`. Session 68 (11.10.2026) is the newest session and it is meaningful. There is no newer empty note. The recap uses this session. Notes were not edited.
+## Імпорт і джерела
 
-## What changed in play
+- Дослівно імпортовано `Notes/Сесія 68.md` з `~/Documents/CloudVault/DND/Campaigns/Rebirth`. SHA-256 копії та оригіналу збігаються.
+- Інші 19 відмінностей у нотатках стосуються лише кінцевих порожніх рядків; workflow вважає ці файли еквівалентними, тому їх не змінено.
+- `.sync-log.txt` записаний для цього запуску; запасний спосіб визначення змін не знадобився.
+- Для recap використано Сесію 68 (11.10.2026). Це найновіша змістовна нотатка, з подіями та продовженням молитви. Новіших порожніх нотаток немає.
 
-The druids of Rain Cloud Grove were convinced to follow Corellon. No new archdruid is named, Nightclaw is still unconscious, and the party has started praying for her. Iven broke a promise to Corellon by saying they had met her; he is unconscious. Kelanik says it was a seizure and that Iven never spoke with her. The latest line labeled as the LP pool is **12** (it was 13 at the start of the debate).
+## Нові факти
 
-## Files changed
+- Келанік повідомив Беніті та Ревалору, що героям треба підготуватися до молитви за Нічнопазур.
+- Рувен поклав свій магічний сувій на вівтар як жертву; заклинання не назване.
+- Останній запис LP — 0; попередній «Пул LP: 12» належить етапу полемічної битви.
+- Молитва привела героїв у транс на берег океану з білим піском і прозорою водою.
+- Кореліон старим утомленим голосом запитала, із чим прийшли. Вона виглядала ще старшою; колись блакитні очі вицвіли.
+- Для молитви потрібні татуювання на тілі, як у героїв, а також амулети із чотирикутною зіркою.
 
-Derived pages:
+## Змінені сторінки
 
+- `content/Notes/Сесія 68.md`
+- `content/index.md`
+- `content/Квести/Всі_квести.md`
+- `content/Квести/Порятунок_Рексара.md`
+- `content/Квести/Розслідування_Тиші_в_Есборзі.md`
+- `content/Локації/Всі_локації.md`
+- `content/Локації/Гай_Дощових_Хмар.md`
+- `content/Панель_кампанії.md`
+- `content/Персонажі/00_Index.md`
+- `content/Персонажі/Беніта.md`
+- `content/Персонажі/Келанік.md`
+- `content/Персонажі/Корелія.md`
+- `content/Персонажі/Нічнопазур.md`
+- `content/Персонажі/Ревалор.md`
+- `content/Персонажі/Рувен.md`
 - `content/Хронологія_подій.md`
 - `content/Чекліст_Рувена_перед_сесією.md`
-- `content/Полемічна бійка.md`
-- `content/Персонажі/00_Index.md`, `Івен.md`, `Келанік.md`, `Рувен.md`, `Ревалор.md`, `Нічнопазур.md`
-- `content/Локації/Гай_Дощових_Хмар.md`, `content/Локації/Всі_локації.md`
-- `content/Квести/Прокляття_Івена.md`, `Порятунок_Рексара.md`, `Розслідування_Тиші_в_Есборзі.md`, `Всі_квести.md`
+- `content/Квести/Порятунок_Нічнопазур.md`
+- `content/Локації/Берег_океану_Кореліон.md`
 
-Dashboard phase:
+Усього: 1 імпортована нотатка та 18 похідних сторінок. Нові сторінки: `Квести/Порятунок_Нічнопазур.md` і `Локації/Берег_океану_Кореліон.md`.
 
-- `content/index.md`
-- `content/Панель_кампанії.md`
+## П’ять перевірок результату
 
-The checklist keeps the compact entity format. The active block is 70 physical lines and 44 checkboxes. The checkbox cap holds. The line target is 40–60, and the extra lines are older valid reminders that were kept.
-
-## Result scores
-
-| Iteration | Score | Fix |
+| Ітерація | Оцінка | Рішення |
 | --- | --- | --- |
-| 1. Evidence | 3, then 5 after the rerun | Corrected the chain: it was returned and put on Nightclaw. Quoted Kelanik’s claim without adding an audience. |
-| 2. Recency | 5 | None. Session 68 is the newest meaningful note. |
-| 3. Usefulness | 5 | None. Next actions are the prayer, Iven’s two versions, and the unnamed archdruid. |
-| 4. Language, links, scope | Ukrainian 4, links 5, scope 5 | None. Table links have no aliases, so the columns stay intact. |
-| 5. Holistic | Evidence 5, recency 5, usefulness 5, Ukrainian 4, links 5, scope 5 | Ready to build. |
+| 1 Evidence | 5/5 | Одержувача підношень залишено невідомим; контакт не прирівняно до лікування, фізичного переходу чи сталої плати сувоєм. |
+| 2 Recency | 5/5 | Найновіша змістовна нотатка й recap — Сесія 68; новіших порожніх нотаток немає. |
+| 3 Usefulness | 5/5 | Обидва огляди мають 5 пріоритетів; наступна сцена, амулети, стан Івена й повернення до Інонни зрозумілі. |
+| 4 Language, links, scope | 5/5 | Українську й frontmatter збережено; усі wiki-посилання оглядів існують, зміни фази обмежено оглядами; окремо ущільнено пробіли чекліста. |
+| 5 Holistic | 5/5 | Усі перевірки пройдено; невідомі збережено, нові факти рознесено, готово до Quartz build. |
 
-## Build
+## Підсумкові оцінки моделі
 
-`npx quartz build` passed: 196 Markdown files parsed, 417 files emitted.
+| Критерій | Оцінка |
+| --- | --- |
+| Відповідність джерелам | 5/5 |
+| Актуальність сесії | 5/5 |
+| Користь для наступних рішень | 5/5 |
+| Читабельність українською | 5/5 |
+| Цілісність посилань оглядів | 5/5 |
+| Дотримання меж фази оглядів | 5/5 |
 
-## Evidence gaps
+## Перевірки та merge-back
 
-- The prayer has no outcome. No archdruid is named. Nothing says the new faith stops the weakening of the grove’s protection, and there is no countdown.
-- Iven’s promise to Corellon has no recorded terms.
-- The unicorn speaker is unnamed, and that account still conflicts with Benita in Session 62.
-- It is not stated whether Nightclaw’s chain is the one from Session 61, or whose mother Revalor meant.
-- The druids’ “breach” is not explained.
-- `LP: 2 (1+1)` is not labeled as the pool, so the checklist uses pool **12**.
-- Rexar is absent from Session 68, so he stays a Giant Badger from Session 67.
-- There is no `Кореліон` page. `Корелія.md` uses a different name, and the notes do not identify them as the same figure, so those pages were not merged.
+- `npx quartz build` пройшов: 198 вхідних файлів, 421 згенерований файл.
+- Єдині попередження Quartz стосувалися git-дат двох тоді ще не закомічених нових сторінок; обидві тепер закомічені.
+- Згенерований HTML головної та панелі перевірений: таблиці мають по 3 колонки, як задумано.
+- Чекліст має 45 активних нагадувань у 60 фізичних рядках. Усі посилання існують, ручні записи та старий архів збережені. Незмінені нагадування зберегли старі теги.
+- Пожертвуваний сувій додано до архіву С61–С70; значення LP оновлено до 0.
+- `git diff --check` для похідних сторінок пройшов. У нотатці-джерелі є кінцеві пробіли та порожній рядок; їх збережено дослівно за вимогою імпорту.
+- Усі 18 змінених похідних сторінок скопійовано назад в Obsidian і звірено побайтово. `Notes/` виключено, всі інші файли vault залишилися незмінними.
+- Зміни сторінок закомічено й запушено в `origin/v4`: `66e75abcee98ed77436187f00459f8f334911050`. Цей звіт і журнал merge-back записуються наступним комітом.
+
+## Невідомі та збережені суперечності
+
+- Наявність амулетів, заклинання на сувої, причина старіння Кореліон і тотожність берега старому Таємничому світові не підтверджені.
+- Пробудження Нічнопазур та Івена, участь Івена в трансі, відновлення захисту гаю й обрання архідруїда не записані.
+- Точних таймерів не додано; ігровий час не обчислювався з реальних дат.
+- Суперечність свідчень про єдинорогів збережена. Одержувача трьох підношень Ревалора не встановлено.
+- Не запускалися тести коду, оскільки змінено лише нотатки, похідні Markdown-сторінки й журнали.
