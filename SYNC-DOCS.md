@@ -74,7 +74,7 @@ Show help:
 - Merge-back excludes `Notes/`
 - Cross-references, indexes, locations, quests, characters, timeline pages, and the pre-session checklist `Чекліст_Рувена_перед_сесією.md` can be updated by Cursor Agent
 - The pre-session checklist follows `CHECKLIST-CONTRACT.md` (compact entity-section format); the contract is embedded into the sync prompt
-- The homepage and campaign dashboard update uses `CAMPAIGN-DASHBOARD-PROMPT.md`, including its five result-scoring iterations
+- The homepage, dashboard, and index formats follow `CAMPAIGN-DASHBOARD-PROMPT.md`. It keeps the homepage focused on the current scene, the dashboard on decisions and resources, and the indexes on compact lookup entries
 
 In practice:
 

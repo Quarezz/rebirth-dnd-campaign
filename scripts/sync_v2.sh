@@ -459,14 +459,14 @@ Global requirements:
   - `content/Квести/Всі_квести.md`
   - `content/Хронологія_подій.md`
   - `content/index.md`
-- Preserve existing style and link conventions.
+- Preserve link targets and follow the compact homepage, dashboard, and index formats in the embedded campaign dashboard prompt. Keep sync and evidence-audit commentary out of wiki pages.
 
 Required workflow:
 1. First update justified derived knowledge pages: character pages, location pages, quest pages, index pages, chronology, and the pre-session checklist.
 2. The pre-session checklist `content/Чекліст_Рувена_перед_сесією.md` must always be updated when session notes changed, following the checklist contract embedded below. Keep its compact entity-section format; do not revert it to long-form prose.
 3. Then update the campaign homepage/dashboard by following the campaign dashboard prompt embedded below.
 4. The embedded prompt's `Files you may edit` and scope rules apply to the dashboard phase only, after the broader derived-page update phase is complete.
-5. The dashboard prompt's five result-scoring iterations are mandatory. Include those scores in your final report.
+5. Verify facts, links, readability, and scope using the embedded dashboard prompt. Keep the homepage, dashboard, and indexes focused on their separate jobs.
 6. Run any build/check commands required by the embedded dashboard prompt. The outer sync script will run `npx quartz build` again after the agent finishes.
 7. At the end, provide a concise summary of files changed, the recap session used, build/check result, and any evidence gaps.
 
